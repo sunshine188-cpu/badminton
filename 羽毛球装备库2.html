@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>羽球装备库 · 球拍与球鞋查阅推荐</title>
+<style>
+  :root{
+    --bg:#eef6fc; --card:#ffffff; --accent:#3f8fdd; --accent-dark:#2f6fb8;
+    --text:#2b3a4a; --muted:#6b8299; --border:#d9e8f4; --light:#eaf4fb;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg); color:var(--text); line-height:1.6;
+  }
+  header{
+    background:linear-gradient(135deg,#cfe8fb 0%,#eaf4fb 60%,#dceefc 100%);
+    padding:36px 20px 28px; text-align:center; border-bottom:1px solid var(--border);
+  }
+  header h1{font-size:28px; color:var(--accent-dark); letter-spacing:2px;}
+  header p{color:var(--muted); margin-top:6px; font-size:14px;}
+  .tabs{
+    display:flex; justify-content:center; flex-wrap:wrap; gap:10px;
+    margin:20px 0 6px; padding:0 16px;
+  }
+  .tabs button{
+    border:1px solid var(--border); background:#fff; color:var(--muted);
+    padding:9px 20px; border-radius:999px; cursor:pointer; font-size:15px;
+    transition:all .15s;
+  }
+  .tabs button.active{background:var(--accent); color:#fff; border-color:var(--accent);}
+  .tabs button:hover{border-color:var(--accent); color:var(--accent-dark);}
+  main{max-width:1080px; margin:0 auto; padding:10px 20px 40px;}
+  .section{display:none;}
+  .section.active{display:block;}
+
+  .filter-bar{
+    display:flex; flex-wrap:wrap; gap:12px; align-items:center;
+    background:#fff; border:1px solid var(--border); border-radius:12px;
+    padding:14px 16px; margin-bottom:20px;
+  }
+  .filter-bar label{font-size:14px; color:var(--muted);}
+  .filter-bar select, .filter-bar input{
+    padding:7px 10px; border:1px solid var(--border); border-radius:8px;
+    font-size:14px; color:var(--text); background:#fff;
+  }
+  .filter-bar input{flex:1; min-width:140px;}
+  .type-btns{display:flex; flex-wrap:wrap; gap:8px;}
+  .type-btns button{
+    border:1px solid var(--border); background:#f7fbfe; color:var(--muted);
+    padding:6px 14px; border-radius:999px; cursor:pointer; font-size:13px;
+  }
+  .type-btns button.active{background:var(--accent); color:#fff; border-color:var(--accent);}
+
+  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:16px;}
+  .card{
+    background:var(--card); border:1px solid var(--border); border-radius:14px;
+    box-shadow:0 2px 8px rgba(63,143,221,.08); transition:transform .15s;
+    padding:14px 14px 16px; display:flex; flex-direction:column;
+  }
+  .card:hover{transform:translateY(-3px); box-shadow:0 6px 16px rgba(63,143,221,.16);}
+  .brand{font-size:12px; color:var(--muted);}
+  .model{font-size:17px; font-weight:700; margin:2px 0 4px;}
+  .price{color:var(--accent-dark); font-weight:700; font-size:16px;}
+  .tags{display:flex; flex-wrap:wrap; gap:6px; margin:8px 0;}
+  .tag{
+    font-size:11px; padding:2px 9px; border-radius:999px; background:var(--light);
+    color:var(--accent-dark); border:1px solid var(--border);
+  }
+  .tag.t0{background:#e3f0fb;}
+  .style{font-size:13px; color:var(--muted);}
+  .desc{
+    font-size:12px; color:#5b7690; margin-top:8px; line-height:1.55;
+    background:var(--light); border-radius:8px; padding:8px 10px;
+  }
+
+  .panel{
+    background:#fff; border:1px solid var(--border); border-radius:14px;
+    padding:24px; margin-bottom:20px;
+  }
+  .panel h2{font-size:19px; color:var(--accent-dark); margin-bottom:6px;}
+  .panel .sub{color:var(--muted); font-size:13px; margin-bottom:18px;}
+  .form-row{display:flex; flex-wrap:wrap; gap:16px; margin-bottom:14px;}
+  .form-item{display:flex; flex-direction:column; min-width:150px; flex:1;}
+  .form-item label{font-size:13px; color:var(--muted); margin-bottom:4px;}
+  .form-item select, .form-item input{
+    padding:9px 10px; border:1px solid var(--border); border-radius:8px; font-size:14px;
+  }
+  .btn{
+    background:var(--accent); color:#fff; border:none; padding:11px 26px;
+    border-radius:999px; font-size:15px; cursor:pointer; margin-top:6px;
+  }
+  .btn:hover{background:var(--accent-dark);}
+  .btn.ghost{background:#fff; color:var(--accent-dark); border:1px solid var(--accent);}
+  .rec-group{margin-top:26px;}
+  .rec-group h3{font-size:16px; color:var(--accent-dark); margin-bottom:12px;
+    border-left:4px solid var(--accent); padding-left:10px;}
+  .rank{display:inline-block; background:var(--accent); color:#fff; border-radius:8px;
+    padding:2px 9px; font-size:12px; margin-bottom:8px;}
+  .reason{font-size:13px; color:var(--muted); margin-top:6px;}
+  footer{text-align:center; color:var(--muted); font-size:12px; padding:20px;}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🏸 羽球装备库</h1>
+  <p>球拍 · 球鞋 查阅与智能推荐</p>
+</header>
+
+<nav class="tabs">
+  <button class="active" data-tab="rackets">羽毛球拍</button>
+  <button data-tab="shoes">羽毛球鞋</button>
+  <button data-tab="recommend">智能推荐</button>
+</nav>
+
+<main>
+  <!-- 球拍 -->
+  <section id="rackets" class="section active">
+    <div class="filter-bar">
+      <label>品牌</label>
+      <select id="r-brand"></select>
+      <label>价格</label>
+      <select id="r-price">
+        <option value="all">全部</option>
+        <option value="0-500">¥500 以下</option>
+        <option value="500-800">¥500–800</option>
+        <option value="800-1200">¥800–1200</option>
+        <option value="1200+">¥1200 以上</option>
+      </select>
+      <input id="r-kw" type="text" placeholder="🔍 搜索品牌 / 型号">
+    </div>
+    <div class="filter-bar type-btns" id="r-types">
+      <button class="active" data-v="all">全部</button>
+      <button data-v="进攻">进攻拍</button>
+      <button data-v="平衡">平衡拍</button>
+      <button data-v="防守">防守拍</button>
+    </div>
+    <div class="grid" id="r-grid"></div>
+  </section>
+
+  <!-- 球鞋 -->
+  <section id="shoes" class="section">
+    <div class="filter-bar">
+      <label>品牌</label>
+      <select id="s-brand"></select>
+      <label>价格</label>
+      <select id="s-price">
+        <option value="all">全部</option>
+        <option value="0-500">¥500 以下</option>
+        <option value="500-800">¥500–800</option>
+        <option value="800-1200">¥800–1200</option>
+        <option value="1200+">¥1200 以上</option>
+      </select>
+      <input id="s-kw" type="text" placeholder="🔍 搜索品牌 / 型号">
+    </div>
+    <div class="filter-bar type-btns" id="s-types">
+      <button class="active" data-v="all">全部</button>
+      <button data-v="速度">速度鞋</button>
+      <button data-v="缓震">缓震鞋</button>
+      <button data-v="全面">全面鞋</button>
+    </div>
+    <div class="grid" id="s-grid"></div>
+  </section>
+
+  <!-- 推荐 -->
+  <section id="recommend" class="section">
+    <div class="panel">
+      <h2>🎯 智能推荐</h2>
+      <p class="sub">填好下面的个人信息，我帮你挑出更合适的球拍和球鞋（数据仅本地计算，不会上传）。</p>
+      <div class="form-row">
+        <div class="form-item"><label>技术水平</label>
+          <select id="q-level"><option>新手</option><option>进阶</option><option>高手</option></select></div>
+        <div class="form-item"><label>打法风格</label>
+          <select id="q-style"><option>进攻为主</option><option>拉吊防守</option><option>平衡控制</option><option>双打快节奏</option><option>还没确定</option></select></div>
+        <div class="form-item"><label>预算（单件）</label>
+          <select id="q-budget"><option value="500">¥500 以下</option><option value="800">¥500–800</option><option value="1200">¥800–1200</option><option value="0">¥1200 以上</option><option value="0">不限</option></select></div>
+      </div>
+      <div class="form-row">
+        <div class="form-item"><label>身高（cm）</label><input id="q-height" type="number" placeholder="如 170"></div>
+        <div class="form-item"><label>体重（kg）</label><input id="q-weight" type="number" placeholder="如 65"></div>
+        <div class="form-item"><label>力量大小</label>
+          <select id="q-strength"><option>力量偏大</option><option>一般</option><option>力量偏小</option></select></div>
+      </div>
+      <div class="form-row">
+        <div class="form-item"><label>手腕伤病</label>
+          <select id="q-wrist"><option>无</option><option>有</option></select></div>
+        <div class="form-item"><label>膝盖伤病</label>
+          <select id="q-knee"><option>无</option><option>有</option></select></div>
+        <div class="form-item"><label>性别</label>
+          <select id="q-gender"><option>男</option><option>女</option></select></div>
+      </div>
+      <button class="btn" id="q-submit">开始推荐</button>
+      <button class="btn ghost" id="q-reset">重置</button>
+      <div id="q-result"></div>
+    </div>
+  </section>
+</main>
+
+<footer>数据为市场参考价，仅供参考 · 本页面可离线使用，无需联网</footer>
+
+<script>
+// ============ 数据 ============
+const rackets = [
+  {brand:'Yonex', model:'天斧 100ZZ', type:'进攻', price:1580, weight:'4U', balance:'头重', style:'进攻 / 单打', level:'进阶/高手', desc:'进攻端的天花板，头重、中杆硬弹，杀球又重又冲。适合力量足、追求一锤定音的高手；新手想挑战可以，但要有心理准备——杆硬头重，对发力要求高。', slug:'ax100zz'},
+  {brand:'Yonex', model:'天斧 99 Pro', type:'进攻', price:1480, weight:'4U', balance:'头重', style:'进攻', level:'进阶/高手', desc:'杀球机器！头重加硬弹中杆，后场重杀特别爽。适合有力量、爱进攻的进阶球友；新手用它容易挥不动还伤手腕，建议先练好发力再上。', slug:'ax99pro'},
+  {brand:'Yonex', model:'天斧 88D Pro', type:'进攻', price:1280, weight:'4U', balance:'头重', style:'双打后场进攻', level:'进阶', desc:'双打后场大杀器，头重但挥速不慢，连续下压强。适合主打后场、喜欢进攻的双打选手；新手建议先把基本功练扎实，再来驾驭它。', slug:'ax88dpro'},
+  {brand:'Yonex', model:'天斧 88S Pro', type:'平衡', price:1280, weight:'4U', balance:'均衡', style:'双打前场 / 控制', level:'进阶', desc:'网前精灵！均衡头重加偏硬中杆，控球细腻、出球快。适合双打前场爱做球、控制型的球友；新手用它练手感也很舒服，不会太重。', slug:'ax88spro'},
+  {brand:'Yonex', model:'天斧 77 Pro', type:'平衡', price:1180, weight:'4U', balance:'均衡', style:'全面', level:'新手/进阶', desc:'均衡水桶机，头重适中、中杆弹性友好，好借力。适合入门到进阶、打法还没定型的球友；新手用它几乎零门槛，容错高，很省心。', slug:'ax77pro'},
+  {brand:'Yonex', model:'弓箭 11 Pro', type:'平衡', price:1380, weight:'4U', balance:'均衡', style:'控制 / 拉吊', level:'进阶/高手', desc:'控制流神器，均衡头重加软弹中杆，落点指哪打哪。适合喜欢拉吊、打多拍的球友；新手用它容易上手，手感柔和，不会震手。', slug:'arc11pro'},
+  {brand:'Yonex', model:'弓箭 7 Pro', type:'平衡', price:1080, weight:'4U', balance:'均衡', style:'控制 / 全面', level:'新手/进阶', desc:'新手友好款！中杆偏软、弹性好，轻轻一挥就有力。适合力量一般、刚开始学的球友；上手轻松，容错率高，越打越有信心。', slug:'arc7pro'},
+  {brand:'Yonex', model:'疾光 NF800', type:'防守', price:1180, weight:'4U', balance:'头轻', style:'速度 / 双打', level:'进阶', desc:'速度型代表，头轻加硬中杆，挥速极快，平抽快挡压制力强。适合双打、爱抢节奏的进阶球友；新手用它需要主动发力，不然出球会偏软。', slug:'nf800'},
+  {brand:'Yonex', model:'疾光 NF700', type:'防守', price:1050, weight:'5U', balance:'头轻', style:'速度 / 防守', level:'新手/进阶', desc:'超轻好上手，头轻加软弹中杆，防守起来像装了弹簧。适合力量小、爱打防守反击的球友，尤其女生；新手用它挥拍轻松，不费手腕。', slug:'nf700'},
+  {brand:'Yonex', model:'疾光 NF1000 Z', type:'防守', price:1250, weight:'4U', balance:'头轻', style:'速度 / 双打', level:'进阶/高手', desc:'疾光新旗舰，头轻但中杆硬弹，挥速快还能下压。适合追求速度又想保留进攻的进阶和高手；新手用它门槛略高，建议有基础后再试。', slug:'nf1000z'},
+  {brand:'Yonex', model:'天斧 66', type:'平衡', price:980, weight:'5U', balance:'均衡', style:'全面 / 女性', level:'新手', desc:'为女生和新手量身打造！5U超轻、头轻均衡、中杆软弹，轻轻松松就能把球打到位，手腕零负担，力量小的姐妹闭眼入。', slug:'ax66'},
+  {brand:'Victor', model:'突击 TK-F 隼', type:'进攻', price:1150, weight:'4U', balance:'头重', style:'进攻', level:'进阶/高手', desc:'进攻利刃！头重加硬中杆，下压凶狠、出球干脆。适合力量不错、喜欢进攻的进阶球友；新手想练进攻可以试，但别急着上太硬的线。', slug:'tkf'},
+  {brand:'Victor', model:'龙牙之刃 Ryuga', type:'进攻', price:1280, weight:'4U', balance:'头重', style:'进攻', level:'高手', desc:'暴力重杀代表，头重、中杆硬，杀球压迫感拉满。适合力量型高手，是重炮的菜；新手和手腕有伤的慎入，容易受伤。', slug:'ryuga'},
+  {brand:'Victor', model:'神速 ARS-100X', type:'平衡', price:1180, weight:'4U', balance:'均衡', style:'速度 / 双打', level:'进阶', desc:'快而不飘！均衡头重加偏硬中杆，挥速快又稳，攻防转换丝滑。适合双打多面手、爱打连贯的进阶球友；新手用它也好上手，很均衡。', slug:'ars100x'},
+  {brand:'Victor', model:'神速 90K', type:'平衡', price:1200, weight:'4U', balance:'均衡', style:'速度 / 双打', level:'进阶/高手', desc:'神速旗舰，头轻均衡加硬弹中杆，出球快、落点尖。适合双打抢节奏、爱平抽的进阶和高手；新手驾驭稍有门槛，练好发力更香。', slug:'ars90k'},
+  {brand:'Victor', model:'极速 12 II', type:'防守', price:1080, weight:'4U', balance:'头轻', style:'速度 / 双打', level:'进阶', desc:'经典速度拍，头轻加适中中杆，平抽快挡又轻又灵活。适合双打前场、爱快速衔接的球友；新手用它不吃力，适合练反应和连贯。', slug:'js12ii'},
+  {brand:'Victor', model:'亮剑 12', type:'防守', price:780, weight:'4U', balance:'头轻', style:'速度 / 双打', level:'进阶', desc:'速度拍里的性价比之王，头轻加弹性中杆，挥拍轻快。适合预算有限、爱双打快节奏的球友；新手用它练手非常合适，轻快好驱动。', slug:'bs12'},
+  {brand:'Victor', model:'驭 DX-9X', type:'平衡', price:980, weight:'4U', balance:'均衡', style:'控制', level:'新手/进阶', desc:'均衡好控、价格友好！头重适中加弹性中杆，攻守都不偏科。适合刚进阶、打法全面或还没定型的球友；新手用它零压力，很好练技术。', slug:'dx9x'},
+  {brand:'Victor', model:'挑战者 9500', type:'平衡', price:400, weight:'4U', balance:'均衡', style:'全面 / 入门', level:'新手', desc:'入门神拍，性价比天花板！4U均衡加软弹中杆，手感扎实。适合预算有限、刚开始学球的球友；新手第一把拍选它不会错，怎么打都顺手。', slug:'tk9500'},
+  {brand:'Li-Ning', model:'雷霆 AXFORCE 80', type:'进攻', price:1050, weight:'4U', balance:'头重', style:'进攻', level:'进阶', desc:'进攻弹性担当，头重加硬弹中杆，杀球有力、落点深。适合喜欢进攻、力量尚可的进阶球友；新手想练杀球可以试试，发力对了会很爽。', slug:'axforce80'},
+  {brand:'Li-Ning', model:'雷霆 90', type:'进攻', price:1280, weight:'4U', balance:'头重', style:'进攻', level:'进阶/高手', desc:'雷霆旗舰，头重加硬中杆，重杀凌厉、爆发力强。适合力量型进攻高手；新手别硬上，杆硬头重对发力要求很高，容易借不到力。', slug:'leiting90'},
+  {brand:'Li-Ning', model:'突袭 7', type:'进攻', price:980, weight:'4U', balance:'头重', style:'进攻', level:'进阶', desc:'突袭系列的进攻甜心，头重加偏硬中杆，下压扎实、不飘。适合爱进攻、力量不错的进阶球友；新手用它练进攻合适，但要注意控制发力别伤手腕。', slug:'tuxi7'},
+  {brand:'Li-Ning', model:'锋影 900', type:'防守', price:1180, weight:'4U', balance:'头轻', style:'速度 / 双打', level:'进阶', desc:'双打快枪！头轻加硬中杆，挥速快、衔接流畅。适合爱双打、抢网前节奏的进阶球友；新手用它轻快，但需要自己主动发力。', slug:'fengying900'},
+  {brand:'Li-Ning', model:'锋影 800', type:'防守', price:1080, weight:'4U', balance:'头轻', style:'速度 / 双打', level:'进阶', desc:'锋影速度拍，头轻加适中中杆，出球轻快、网前灵活。适合双打快节奏、爱连贯的进阶球友；新手用它好上手，适合练速度型打法。', slug:'fengying800'},
+  {brand:'Li-Ning', model:'战戟 9000', type:'平衡', price:1080, weight:'4U', balance:'均衡', style:'全面', level:'新手/进阶', desc:'全面均衡的代表作，头重适中加弹性中杆，攻守兼备。适合新手到进阶、打法全面的球友；新手用它很稳，容错高，练什么都合适。', slug:'zhanji9000'},
+  {brand:'Li-Ning', model:'风刃 900', type:'平衡', price:980, weight:'4U', balance:'均衡', style:'控制', level:'新手/进阶', desc:'控制稳定、性价比高，均衡头重加适中中杆，出球精准。适合喜欢打控制、拉吊的球友；新手用它手感清晰，练控球特别合适。', slug:'fengren900'},
+  {brand:'Li-Ning', model:'能量 75C', type:'平衡', price:880, weight:'4U', balance:'均衡', style:'进攻 / 全面', level:'新手/进阶', desc:'攻防均衡、好上手！中杆弹性好，进攻有力量、防守也灵活。适合新手到进阶、想尝试进攻的球友；上手轻松，不会太硬太重。', slug:'nengliang75c'},
+  {brand:'Yonex', model:'纳米锐速 NR100', type:'平衡', price:380, weight:'4U', balance:'均衡', style:'入门', level:'新手', desc:'大牌入门首选，均衡好打、中杆软弹，耐造又便宜。适合刚开始学球、预算不多的球友；新手用它轻松入门，怎么打都不心疼。', slug:'nr100'},
+  {brand:'Li-Ning', model:'疾速 3000', type:'平衡', price:350, weight:'4U', balance:'均衡', style:'入门', level:'新手', desc:'平价入门好选择，均衡加软中杆，手感扎实。适合预算有限的新手、学生党；上手轻松，练习基本功非常合适。', slug:'jisu3000'},
+];
+
+const shoesData = [
+  {brand:'Yonex', model:'65Z3', type:'全面', price:950, style:'全面 / 稳定', level:'进阶', desc:'经典全能鞋，包裹稳定、启动不拖沓。适合打法全面、啥都想练的进阶球友；新手穿它稳当，抓地好，不容易崴脚。', slug:'65z3'},
+  {brand:'Yonex', model:'65Z2', type:'全面', price:850, style:'全面 / 稳定', level:'进阶', desc:'经典全面款，包裹和稳定兼顾，脚感扎实。适合全面型、爱打多拍的球友；新手穿它很稳，保护到位。', slug:'65z2'},
+  {brand:'Yonex', model:'88D Power Cushion', type:'缓震', price:1050, style:'缓震 / 保护', level:'进阶/高手', desc:'缓震扛把子！中底缓震出色，落地像踩棉花。适合体重偏大、膝盖爱酸痛的球友；新手穿它保护膝盖，打球更安心。', slug:'88d'},
+  {brand:'Yonex', model:'88 Dial', type:'缓震', price:1150, style:'缓震 / 保护', level:'高手', desc:'尤尼克斯顶级缓震款，BOA快速包裹加强力缓震。适合追求极致保护、膝盖负担大的球友；新手预算够可以直接上，脚感一流。', slug:'88dial'},
+  {brand:'Yonex', model:'Comfort Z3', type:'缓震', price:980, style:'缓震 / 舒适', level:'新手/进阶', desc:'舒适度拉满！缓震好、鞋型软，久穿不累脚。适合体重中等、爱舒适的球友；新手穿它脚感柔软，很适合长时间练球。', slug:'comfortz3'},
+  {brand:'Yonex', model:'Aerus Z', type:'速度', price:900, style:'速度 / 轻量', level:'进阶', desc:'超轻速度鞋，穿上像没穿一样轻。适合爱双打、抢节奏的进阶球友；新手如果脚力一般，建议别买太轻，保护和支撑会弱一些。', slug:'aerusz'},
+  {brand:'Yonex', model:'Aerus 3', type:'速度', price:880, style:'速度 / 轻量', level:'进阶', desc:'轻量速度款，启动快、反应灵敏。适合双打前场、爱快速移动的球友；新手想体验速度感可以，但注意它的保护偏轻。', slug:'aerus3'},
+  {brand:'Yonex', model:'03Z', type:'速度', price:920, style:'速度', level:'进阶/高手', desc:'轻快灵活的代表，启动迅速、抓地好。适合双打、爱打快节奏的进阶和高手；新手用它轻便，但缓震一般，膝盖敏感要留意。', slug:'03z'},
+  {brand:'Yonex', model:'Eclipsion Z3', type:'缓震', price:1100, style:'保护 / 稳定', level:'高手', desc:'支撑保护的旗舰款，防侧翻强、稳定性一流。适合体重偏大、爱急停变向的球友；新手用它安全感满满，不容易扭伤。', slug:'eclipsionz3'},
+  {brand:'Victor', model:'P9200', type:'全面', price:880, style:'全面 / 稳定', level:'进阶', desc:'胜利的销量常青树！全面稳定、耐磨耐用。适合打法全面、爱扎实脚感的球友；新手穿它稳定又耐造，是入门的好选择。', slug:'p9200'},
+  {brand:'Victor', model:'P9200 II', type:'全面', price:950, style:'全面 / 稳定', level:'进阶/高手', desc:'P9200的升级版，稳定性和包裹再上一档。适合追求耐用、脚感扎实的进阶和高手；新手预算够的话，穿它特别踏实。', slug:'p9200ii'},
+  {brand:'Victor', model:'P8500', type:'缓震', price:850, style:'缓震 / 保护', level:'新手/进阶', desc:'缓震保护的经典款，脚感扎实、保护到位。适合体重中等偏大、爱稳定的球友；新手穿它很合适，保护性好又不会太贵。', slug:'p8500'},
+  {brand:'Victor', model:'P9310', type:'缓震', price:920, style:'缓震 / 保护', level:'高手', desc:'重型保护缓震款，中底厚实、支撑强。适合大体重、膝盖负担重的球友；新手如果体重偏大，选它保护最到位。', slug:'p9310'},
+  {brand:'Victor', model:'S82', type:'速度', price:800, style:'速度', level:'进阶', desc:'轻量快速、双打好选择，启动快、包裹轻。适合爱双打、抢节奏的球友；新手穿它轻快，但缓震一般，膝盖敏感的别选太轻的鞋。', slug:'s82'},
+  {brand:'Victor', model:'S82 II', type:'速度', price:850, style:'速度', level:'进阶', desc:'S82升级版，轻快灵活又提升了舒适度。适合双打快节奏、爱连贯的球友；新手想体验速度可以试，兼顾了一部分舒适。', slug:'s82ii'},
+  {brand:'Victor', model:'A970', type:'速度', price:780, style:'速度', level:'新手/进阶', desc:'轻快灵活、性价比高！启动快、价格友好。适合新手到进阶、爱速度的球友；新手穿它练步伐很合适，轻便不吃力。', slug:'a970'},
+  {brand:'Li-Ning', model:'战戟', type:'全面', price:700, style:'全面', level:'新手/进阶', desc:'全面均衡、价格友好，适合各种打法。适合新手到进阶、打法全面的球友；新手穿它不挑人，怎么打都合适。', slug:'zhanji'},
+  {brand:'Li-Ning', model:'战戟 II', type:'全面', price:750, style:'全面', level:'进阶', desc:'战戟升级款，全面均衡、包裹更稳。适合进阶球友，攻防都照顾得到；新手预算够可以一步到位，很省心。', slug:'zhanji2'},
+  {brand:'Li-Ning', model:'变色龙', type:'全面', price:650, style:'全面 / 个性', level:'新手', desc:'款式时尚、全面够用，好看又好穿。适合爱颜值、打法全面的新手；新手穿它心情好，保护也够日常练球用。', slug:'bianselong'},
+  {brand:'Li-Ning', model:'变色龙 4', type:'全面', price:680, style:'全面 / 个性', level:'新手/进阶', desc:'颜值与性能兼顾，全面均衡、性价比高。适合爱穿搭、刚开始学的球友；新手穿它又好看又舒服，练球更有动力。', slug:'bianselong4'},
+  {brand:'Li-Ning', model:'雷霆', type:'速度', price:680, style:'速度', level:'新手/进阶', desc:'轻快启动、双打适用，抓地灵活。适合爱双打、抢节奏的球友；新手穿它轻便，练步伐很顺手。', slug:'leiting'},
+  {brand:'Li-Ning', model:'云霆', type:'缓震', price:720, style:'缓震', level:'新手/进阶', desc:'缓震舒适、保护到位，脚感柔软。适合膝盖敏感、爱舒适的球友；新手穿它软软的，练球不累脚。', slug:'yunting'},
+  {brand:'Li-Ning', model:'幻影', type:'全面', price:520, style:'全面 / 入门', level:'新手', desc:'入门全面款，价格实惠、脚感均衡。适合预算有限的新手；新手第一双鞋选它很合适，保护够用还不贵。', slug:'huanying'},
+  {brand:'Mizuno', model:'Wave Claw 2', type:'全面', price:750, style:'全面 / 稳定', level:'进阶', desc:'稳定抓地、耐久好！防滑抓地力出色。适合爱跑动、步伐大的球友；新手穿它抓地稳，做起步伐更有安全感。', slug:'waveclaw2'},
+  {brand:'Asics', model:'Gel Rocket 11', type:'缓震', price:450, style:'缓震 / 入门', level:'新手', desc:'入门缓震神鞋，价格实惠、保护到位。适合预算有限的新手、学生党；新手第一双鞋选它性价比超高，缓震好还不贵。', slug:'gelrocket11'},
+  {brand:'Asics', model:'Gel Blade 9', type:'速度', price:700, style:'速度 / 抓地', level:'进阶', desc:'抓地启动好，移动灵活。适合爱快速移动、打双打的进阶球友；新手穿它轻快，练步伐反应很合适。', slug:'gelblade9'},
+];
+
+// ============ 工具 ============
+const $ = id => document.getElementById(id);
+function uniqueBrands(list){ return [...new Set(list.map(i=>i.brand))]; }
+function money(n){ return '¥' + n.toLocaleString('zh-CN'); }
+
+function inPrice(price, range){
+  if(range==='all') return true;
+  if(range==='0-500') return price<=500;
+  if(range==='500-800') return price>500 && price<=800;
+  if(range==='800-1200') return price>800 && price<=1200;
+  if(range==='1200+') return price>1200;
+  return true;
+}
+
+// ============ 卡片渲染 ============
+function cardHTML(item, kind){
+  const tags = kind==='racket'
+    ? [`<span class="tag t0">${item.type}</span>`,`<span class="tag">${item.weight}</span>`,`<span class="tag">${item.balance}</span>`]
+    : [`<span class="tag t0">${item.type}</span>`];
+  return `
+    <div class="card">
+      <div class="brand">${item.brand}</div>
+      <div class="model">${item.model}</div>
+      <div class="price">${money(item.price)}</div>
+      <div class="tags">${tags.join('')}</div>
+      <div class="style">适合：${item.style} · ${item.level}</div>
+      <div class="desc">💬 ${item.desc}</div>
+    </div>`;
+}
+
+function renderGrid(id, items, kind){
+  $(id).innerHTML = items.length
+    ? items.map(i=>cardHTML(i, kind)).join('')
+    : '<p style="color:#6b8299;">没有找到符合条件的装备，试试放宽筛选条件吧。</p>';
+}
+
+// ============ 筛选 ============
+const rFilter = {brand:'all', price:'all', type:'all', kw:''};
+const sFilter = {brand:'all', price:'all', type:'all', kw:''};
+
+function applyRacketFilter(){
+  const kw = rFilter.kw.toLowerCase();
+  const list = rackets.filter(r =>
+    (rFilter.brand==='all' || r.brand===rFilter.brand) &&
+    (rFilter.type==='all' || r.type===rFilter.type) &&
+    inPrice(r.price, rFilter.price) &&
+    (kw==='' || (r.brand+r.model+r.style).toLowerCase().includes(kw))
+  );
+  renderGrid('r-grid', list, 'racket');
+}
+function applyShoeFilter(){
+  const kw = sFilter.kw.toLowerCase();
+  const list = shoesData.filter(s =>
+    (sFilter.brand==='all' || s.brand===sFilter.brand) &&
+    (sFilter.type==='all' || s.type===sFilter.type) &&
+    inPrice(s.price, sFilter.price) &&
+    (kw==='' || (s.brand+s.model+s.style).toLowerCase().includes(kw))
+  );
+  renderGrid('s-grid', list, 'shoe');
+}
+
+function fillBrands(){
+  const rb = $('r-brand'), sb = $('s-brand');
+  let rOpt = '<option value="all">全部</option>';
+  uniqueBrands(rackets).forEach(b=> rOpt += `<option>${b}</option>`);
+  rb.innerHTML = rOpt;
+  let sOpt = '<option value="all">全部</option>';
+  uniqueBrands(shoesData).forEach(b=> sOpt += `<option>${b}</option>`);
+  sb.innerHTML = sOpt;
+}
+
+function bindTypeBtns(containerId, filterObj, apply){
+  document.querySelectorAll(`#${containerId} button`).forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll(`#${containerId} button`).forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      filterObj.type = btn.dataset.v;
+      apply();
+    });
+  });
+}
+
+// ============ 推荐逻辑 ============
+function recommend(p){
+  const bmi = p.height>0 ? p.weight / Math.pow(p.height/100, 2) : 0;
+  const heavy = p.weight>=80 || bmi>=25;
+
+  function racketScore(r){
+    let s = 50;
+    const st = p.style;
+    if(st==='进攻为主') s += r.type==='进攻'?28 : r.type==='平衡'?16 : 8;
+    else if(st==='拉吊防守') s += (r.type==='防守'||r.type==='平衡')?24 : 8;
+    else if(st==='平衡控制') s += r.type==='平衡'?28 : r.type==='防守'?16 : 10;
+    else if(st==='双打快节奏') s += (r.type==='防守'||r.type==='平衡')?24 : 14;
+    else s += 14;
+    if(p.level==='新手'){ s += r.weight==='5U'?18 : r.weight==='4U'?12 : 0; s += r.balance==='头轻'?12 : r.balance==='均衡'?8 : -4; }
+    else if(p.level==='进阶'){ s += r.weight==='4U'?10 : r.weight==='5U'?8 : 6; }
+    else { s += r.balance==='头重'?10 : 6; }
+    if(p.strength==='力量偏小'){ s += r.balance==='头轻'?14 : r.balance==='均衡'?8 : -6; s += r.weight==='5U'?8:0; }
+    else if(p.strength==='力量偏大'){ s += r.balance==='头重'?12 : 4; }
+    else { s += 6; }
+    if(p.wrist==='有'){ s += r.balance==='头重'?-20 : r.balance==='头轻'?12 : 6; }
+    if(p.gender==='女'){ s += r.weight==='5U'?8 : r.weight==='4U'?4 : -2; s += r.balance==='头轻'?6:0; }
+    if(heavy) s += r.balance==='头重'?-4 : 2;
+    if(p.budget>0 && r.price>p.budget) s -= 40;
+    return s;
+  }
+
+  function shoeScore(sh){
+    let s = 50;
+    const st = p.style;
+    if(st==='双打快节奏') s += sh.type==='速度'?22 : sh.type==='全面'?18 : 12;
+    else if(st==='进攻为主') s += (sh.type==='缓震'||sh.type==='全面')?18 : 12;
+    else if(st==='拉吊防守') s += sh.type==='缓震'?22 : sh.type==='全面'?18 : 10;
+    else s += sh.type==='全面'?20 : 14;
+    if(p.knee==='有') s += sh.type==='缓震'?24 : sh.type==='全面'?14 : -10;
+    if(heavy) s += sh.type==='缓震'?16 : sh.type==='全面'?10 : -6;
+    if(p.level==='新手') s += (sh.type==='缓震'||sh.type==='全面')?14 : 4;
+    if(p.gender==='女') s += 4;
+    if(p.budget>0 && sh.price>p.budget) s -= 40;
+    return s;
+  }
+
+  const racks = rackets.map(r=>({...r, score:racketScore(r)})).sort((a,b)=>b.score-a.score).slice(0,3);
+  const shoos = shoesData.map(sh=>({...sh, score:shoeScore(sh)})).sort((a,b)=>b.score-a.score).slice(0,3);
+  return {racks, shoos, p};
+}
+
+function racketReason(r, p){
+  const notes=[r.desc];
+  if(p.style==='进攻为主' && r.type==='进攻') notes.push('契合你的进攻打法');
+  if(p.style==='拉吊防守' && r.type!=='进攻') notes.push('适合拉吊控制');
+  if(p.style==='双打快节奏' && r.type!=='进攻') notes.push('适合双打节奏');
+  if(p.level==='新手' && (r.weight==='5U' || r.balance!=='头重')) notes.push('对新手友好');
+  if(p.strength==='力量偏小' && r.balance!=='头重') notes.push('挥拍省力');
+  if(p.wrist==='有') notes.push(r.balance==='头重' ? '手腕有伤需谨慎' : '减轻手腕负担');
+  if(p.gender==='女' && r.weight!=='3U') notes.push('适合女性');
+  if(p.budget>0 && r.price>p.budget) notes.push('略超预算，可作升级备选');
+  else notes.push('在预算范围内');
+  return notes.slice(0,3).join('；');
+}
+function shoeReason(sh, p){
+  const notes=[sh.desc];
+  if(p.knee==='有') notes.push(sh.type==='缓震' ? '缓震设计，减轻膝盖压力' : '膝盖有伤建议优先缓震鞋');
+  if(p.style==='双打快节奏' && sh.type==='速度') notes.push('适合双打快节奏');
+  if(p.level==='新手' && sh.type!=='速度') notes.push('保护性好，适合入门');
+  if(p.budget>0 && sh.price>p.budget) notes.push('略超预算，可作升级备选');
+  else notes.push('在预算范围内');
+  return notes.slice(0,3).join('；');
+}
+
+function showRecommend(){
+  const p = {
+    level: $('q-level').value,
+    style: $('q-style').value,
+    budget: parseInt($('q-budget').value, 10),
+    height: parseFloat($('q-height').value) || 0,
+    weight: parseFloat($('q-weight').value) || 0,
+    strength: $('q-strength').value,
+    wrist: $('q-wrist').value,
+    knee: $('q-knee').value,
+    gender: $('q-gender').value,
+  };
+  const {racks, shoos} = recommend(p);
+  const rackCards = racks.map((r,i)=>`
+    <div class="card" style="margin-bottom:16px;">
+      <span class="rank">TOP ${i+1}</span>
+      <div class="brand">${r.brand}</div>
+      <div class="model">${r.model}</div>
+      <div class="price">${money(r.price)}</div>
+      <div class="tags">${[`<span class="tag t0">${r.type}</span>`,`<span class="tag">${r.weight}</span>`,`<span class="tag">${r.balance}</span>`].join('')}</div>
+      <div class="reason">💡 ${racketReason(r,p)}</div>
+    </div>`).join('');
+  const shoeCards = shoos.map((s,i)=>`
+    <div class="card" style="margin-bottom:16px;">
+      <span class="rank">TOP ${i+1}</span>
+      <div class="brand">${s.brand}</div>
+      <div class="model">${s.model}</div>
+      <div class="price">${money(s.price)}</div>
+      <div class="tags"><span class="tag t0">${s.type}</span></div>
+      <div class="reason">💡 ${shoeReason(s,p)}</div>
+    </div>`).join('');
+
+  $('q-result').innerHTML = `
+    <div class="rec-group">
+      <h3>为你推荐的羽毛球拍</h3>
+      <div class="grid">${rackCards}</div>
+    </div>
+    <div class="rec-group">
+      <h3>为你推荐的羽毛球鞋</h3>
+      <div class="grid">${shoeCards}</div>
+    </div>
+    <p style="color:#6b8299;font-size:12px;margin-top:10px;">* 推荐结果为简单规则筛选，仅供参考，购买前建议到实体店试打/试穿。</p>`;
+  $('q-result').scrollIntoView({behavior:'smooth'});
+}
+
+// ============ Tab 切换 ============
+document.querySelectorAll('.tabs button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    btn.classList.add('active');
+    $(btn.dataset.tab).classList.add('active');
+  });
+});
+
+// ============ 事件绑定 ============
+$('r-brand').addEventListener('change', e=>{ rFilter.brand=e.target.value; applyRacketFilter(); });
+$('r-price').addEventListener('change', e=>{ rFilter.price=e.target.value; applyRacketFilter(); });
+$('r-kw').addEventListener('input', e=>{ rFilter.kw=e.target.value; applyRacketFilter(); });
+$('s-brand').addEventListener('change', e=>{ sFilter.brand=e.target.value; applyShoeFilter(); });
+$('s-price').addEventListener('change', e=>{ sFilter.price=e.target.value; applyShoeFilter(); });
+$('s-kw').addEventListener('input', e=>{ sFilter.kw=e.target.value; applyShoeFilter(); });
+$('q-submit').addEventListener('click', showRecommend);
+$('q-reset').addEventListener('click', ()=>{
+  ['q-level','q-style','q-budget','q-strength','q-wrist','q-knee','q-gender'].forEach(id=>$(id).selectedIndex=0);
+  $('q-height').value=''; $('q-weight').value=''; $('q-result').innerHTML='';
+});
+
+// ============ 初始化 ============
+fillBrands();
+bindTypeBtns('r-types', rFilter, applyRacketFilter);
+bindTypeBtns('s-types', sFilter, applyShoeFilter);
+applyRacketFilter();
+applyShoeFilter();
+</script>
+</body>
+</html>
